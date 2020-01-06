@@ -2,6 +2,7 @@
  * Create a list that holds all of your cards
  */
 
+var cardIconList = ["fa fa-cube", "fa fa-bolt", "fa fa-cube", "fa fa-leaf", "fa fa-bomb", "fa fa-paper-plane-o", "fa fa-paper-plane-o", "fa fa-anchor", "fa fa-bomb", "fa fa-diamond", "fa fa-leaf", "fa fa-anchor", "fa fa-bolt", "fa fa-bicycle", "fa fa-bicycle", "fa fa-diamond"];
 
 /*
  * Display the cards on the page
@@ -12,7 +13,8 @@
 
 // Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
-    var currentIndex = array.length, temporaryValue, randomIndex;
+    var currentIndex = array.length,
+        temporaryValue, randomIndex;
 
     while (currentIndex !== 0) {
         randomIndex = Math.floor(Math.random() * currentIndex);
@@ -21,10 +23,46 @@ function shuffle(array) {
         array[currentIndex] = array[randomIndex];
         array[randomIndex] = temporaryValue;
     }
-
     return array;
 }
 
+var shuffledCardList = shuffle(cardIconList);
+//console.log(shuffledCardList, "aaaaaa");
+
+var ul = document.getElementsByClassName("deck")[0];
+
+for (var i = 0; i < shuffledCardList.length; ++i) {
+    var li = document.createElement('li');
+    li.className = "card";
+    var icon = document.createElement('i');
+    icon.className = shuffledCardList[i];
+    li.appendChild(icon);
+    ul.appendChild(li);
+}
+
+//var cardIconList = [];
+
+/* var cardElements = document.getElementsByClassName("card");
+for (var i = 0; i < cardElements.length; ++i) {
+    // get the childNode in <li>
+    var childNode = cardElements[i].childNodes[1];
+    // get the class name inside <i>
+    var child = childNode.className;
+    // get the second class name in icon and push to CardIconList
+    cardIconList.push(child);
+
+} */
+
+function removeClass(cardElements) {
+    for (var i = 0; i < cardElements.length; ++i) {
+        // get the childNode in <li>
+        var childNode = cardElements[i].childNodes[1];
+        // remove all the class names inside <i>
+        var child = childNode.removeAttribute("class");
+
+        console.log(childNode, "lalalalal");
+    }
+}
 
 /*
  * set up the event listener for a card. If a card is clicked:
