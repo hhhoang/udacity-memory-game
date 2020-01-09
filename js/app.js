@@ -2,11 +2,11 @@
  * Create a list that holds all of your cards
  */
 
-const cardList = ["fa fa-cube", "fa fa-bolt", "fa fa-cube", "fa fa-leaf", "fa fa-bomb", "fa fa-paper-plane-o", "fa fa-paper-plane-o", "fa fa-anchor", "fa fa-bomb", "fa fa-diamond", "fa fa-leaf", "fa fa-anchor", "fa fa-bolt", "fa fa-bicycle", "fa fa-bicycle", "fa fa-diamond"];
+const cardList = ['fa fa-cube', 'fa fa-bolt', 'fa fa-cube', 'fa fa-leaf', 'fa fa-bomb', 'fa fa-paper-plane-o', 'fa fa-paper-plane-o', 'fa fa-anchor', 'fa fa-bomb', 'fa fa-diamond', 'fa fa-leaf', 'fa fa-anchor', 'fa fa-bolt', 'fa fa-bicycle', 'fa fa-bicycle', 'fa fa-diamond'];
 
 /*
  * Display the cards on the page
- *   - shuffle the list of cards using the provided "shuffle" method below
+ *   - shuffle the list of cards using the provided 'shuffle' method below
  *   - loop through each card and create its HTML
  *   - add each card's HTML to the page
  */
@@ -26,19 +26,19 @@ function shuffle(array) {
     return array;
 }
 
-let deck = document.getElementsByClassName("deck")[0];
+let deck = document.getElementsByClassName('deck')[0];
 // shuffle CardList and create HTML and add to page
 function updateBoard(cardList) {
+    // if there is any element inside <UL> delete to restart fresh
+    deck.innerHTML = '';
     let shuffledCardList = shuffle(cardList);
-
-    let ul = deck;
     for (let i = 0; i < shuffledCardList.length; ++i) {
         let li = document.createElement('li');
-        li.className = "card";
+        li.className = 'card';
         let icon = document.createElement('i');
         icon.className = shuffledCardList[i];
         li.appendChild(icon);
-        ul.appendChild(li);
+        deck.appendChild(li);
     }
 }
 
@@ -47,7 +47,7 @@ updateBoard(cardList);
 /*
  * set up the event listener for a card. If a card is clicked:
  *  - display the card's symbol (put this functionality in another function that you call from this one)
- *  - add the card to a *list* of "open" cards (put this functionality in another function that you call from this one)
+ *  - add the card to a *list* of 'open' cards (put this functionality in another function that you call from this one)
  *  - if the list already has another card, check to see if the two cards match
  *    + if the cards do match, lock the cards in the open position (put this functionality in another function that you call from this one)
  *    + if the cards do not match, remove the cards from the list and hide the card's symbol (put this functionality in another function that you call from this one)
@@ -55,90 +55,120 @@ updateBoard(cardList);
  *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
  */
 
-//console.log(deck, "deck");
-// 
 // following https://gomakethings.com/listening-for-click-events-with-vanilla-javascript/ 
-
 let openCardList = [];
 
 function clickCard(event) {
     let card = event.target;
 
-    // If the clicked element doesn't have the right selector, bail
+    // if click is not on card, bail
     if (!card.matches('.card')) return;
-    // Don't follow the link
     event.preventDefault();
     // if card is clicked, display Card
-    console.log(card, "card is clicked");
     displayCard(card);
 }
 
-deck.addEventListener("click", clickCard);
+deck.addEventListener('click', clickCard);
 
 // display Card 
 function displayCard(card) {
-
-    // add class "open show" to show the icon of the card
-    card.className += " open show";
+    // add class 'open show' to show the icon of the card
+    card.className += ' open show';
+    incrementMoveCounter();
     addToOpenCardList(card);
 }
 
-// add the card to a *list* of "open" cards
+// add the card to a *list* of 'open' cards
 function addToOpenCardList(card) {
     openCardList.push(card);
-    if (openCardList.length == 2) {
-        checkIfMatch();
-    }
+    setTimeout(function() {
+        if (openCardList.length == 2) {
+            checkIfMatch();
+        }
+    }, 3000);
 }
 
 // check to see if the two cards match, if not 
 function checkIfMatch() {
     if (openCardList[0].isEqualNode(openCardList[1])) {
-        console.log("match");
-        setTimeout(matchedCards(openCardList[0]), 300);
-        setTimeout(matchedCards(openCardList[1]), 300);
+        matchedCard(openCardList[0]);
+        matchedCard(openCardList[1]);
         openCardList = [];
         checkIfAllCardsMatch();
     } else {
-        setTimeout(notMatchedCards(), 3000);
+        notMatchedCard(openCardList[0]);
+        notMatchedCard(openCardList[1]);
         openCardList = [];
     }
 
 }
 
 // if the cards do match, lock the cards in the open position
-function matchedCards(card) {
-    card.className += " match";
-    card.className = card.className.replace(/\b open show\b/g, "");
-    console.log(card.className, "matchhhhhhh");
+function matchedCard(card) {
+    card.className += ' match';
+    card.className = card.className.replace(/\b open show\b/g, '');
 }
 
 // if cards do not match, remove the cards from the list and hide the card's symbol 
-function notMatchedCards() {
-    console.log("not match");
-    openCardList[0].className = openCardList[0].className.replace(/\b open show\b/g, "");
-    openCardList[1].className = openCardList[1].className.replace(/\b open show\b/g, "");
+function notMatchedCard(card) {
+    card.className = card.className.replace(/\b open show\b/g, '');
 }
+
+
+//increment the move counter and display it on the page
+let moves = document.getElementsByClassName('moves')[0];
 
 function incrementMoveCounter() {
-
+    moves.innerHTML = parseInt(moves.innerHTML) + 1;
 }
 
-let match = [];
 
+let match = [];
+// if all cards have matched, display a message with the final score
 function checkIfAllCardsMatch() {
     let cards = document.getElementsByClassName('card');
-    console.log(cards, "cardsssss");
     for (let i = 0; i < cards.length; i++) {
         if (cards[i].className.match('match')) {
-            console.log("yeahhh");
             match.push(cards[i]);
         }
     }
     if (match.length == 16) {
-        alert("you wonnnnn");
+        displayWonMessage();
     } else {
         match = [];
     }
-
 }
+
+
+// Display win message
+// https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_modal
+function displayWonMessage() {
+    // Get the modal
+    var modal = document.getElementById('wonMessage');
+    // Get the <span> element that closes the modal
+    var span = document.getElementsByClassName('close')[0];
+
+    modal.style.display = 'block';
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function() {
+        modal.style.display = 'none';
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = 'none';
+        }
+    }
+}
+
+// Restart the game Button (reset board, moves and star rating)
+let restart = document.getElementsByClassName('restart')[0];
+
+function restartGame() {
+    updateBoard(cardList);
+    moves.innerHTML = 0;
+    // TO-DO: reset stars
+}
+
+restart.addEventListener('click', restartGame);
