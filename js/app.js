@@ -81,11 +81,9 @@ function displayCard(card) {
 // add the card to a *list* of 'open' cards
 function addToOpenCardList(card) {
     openCardList.push(card);
-    setTimeout(function() {
-        if (openCardList.length == 2) {
-            checkIfMatch();
-        }
-    }, 3000);
+    if (openCardList.length == 2) {
+        checkIfMatch();
+    }
 }
 
 // check to see if the two cards match, if not 
