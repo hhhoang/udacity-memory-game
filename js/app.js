@@ -3,7 +3,7 @@
  */
 
 const cardList = ['fa fa-cube', 'fa fa-bolt', 'fa fa-cube', 'fa fa-leaf', 'fa fa-bomb', 'fa fa-paper-plane-o', 'fa fa-paper-plane-o', 'fa fa-anchor', 'fa fa-bomb', 'fa fa-diamond', 'fa fa-leaf', 'fa fa-anchor', 'fa fa-bolt', 'fa fa-bicycle', 'fa fa-bicycle', 'fa fa-diamond'];
-
+let isPlaying = false;
 /*
  * Display the cards on the page
  *   - shuffle the list of cards using the provided 'shuffle' method below
@@ -28,11 +28,11 @@ function shuffle(array) {
 
 let deck = document.getElementsByClassName('deck')[0];
 // shuffle CardList and create HTML and add to page
-function updateBoard(cardList) {
+function updateDeck(cardList) {
     // if there is any element inside <UL> delete to restart fresh
     deck.innerHTML = '';
     let shuffledCardList = shuffle(cardList);
-    for (let i = 0; i < shuffledCardList.length; ++i) {
+    for (var i = 0; i < shuffledCardList.length; ++i) {
         let li = document.createElement('li');
         li.className = 'card';
         let icon = document.createElement('i');
@@ -40,9 +40,10 @@ function updateBoard(cardList) {
         li.appendChild(icon);
         deck.appendChild(li);
     }
+    isPlaying = true;
 }
 
-updateBoard(cardList);
+updateDeck(cardList);
 
 /*
  * set up the event listener for a card. If a card is clicked:
@@ -63,18 +64,22 @@ function clickCard(event) {
 
     // if click is not on card, bail
     if (!card.matches('.card')) return;
-    event.preventDefault();
+    //event.preventDefault();
     // if card is clicked, display Card
-    displayCard(card);
+    if (openCardList.length < 2) {
+        display(card);
+    }
+
 }
 
 deck.addEventListener('click', clickCard);
 
 // display Card 
-function displayCard(card) {
+function display(card) {
     // add class 'open show' to show the icon of the card
     card.className += ' open show';
     incrementMoveCounter();
+    updateStars();
     addToOpenCardList(card);
 }
 
@@ -89,35 +94,39 @@ function addToOpenCardList(card) {
 // check to see if the two cards match, if not 
 function checkIfMatch() {
     if (openCardList[0].isEqualNode(openCardList[1])) {
-        matchedCard(openCardList[0]);
-        matchedCard(openCardList[1]);
+        matchCard(openCardList[0]);
+        matchCard(openCardList[1]);
         openCardList = [];
         checkIfAllCardsMatch();
     } else {
-        notMatchedCard(openCardList[0]);
-        notMatchedCard(openCardList[1]);
-        openCardList = [];
+        setTimeout(function() {
+            notmatchCard(openCardList[0]);
+            notmatchCard(openCardList[1]);
+            openCardList = [];
+        }, 500);
     }
 
 }
 
+
+
 // if the cards do match, lock the cards in the open position
-function matchedCard(card) {
+function matchCard(card) {
     card.className += ' match';
     card.className = card.className.replace(/\b open show\b/g, '');
 }
 
 // if cards do not match, remove the cards from the list and hide the card's symbol 
-function notMatchedCard(card) {
+function notmatchCard(card) {
     card.className = card.className.replace(/\b open show\b/g, '');
 }
 
 
 //increment the move counter and display it on the page
-let moves = document.getElementsByClassName('moves')[0];
+let moveCounter = document.getElementsByClassName('moves')[0];
 
 function incrementMoveCounter() {
-    moves.innerHTML = parseInt(moves.innerHTML) + 1;
+    moveCounter.innerHTML = parseInt(moveCounter.innerHTML) + 1;
 }
 
 
@@ -160,13 +169,41 @@ function displayWonMessage() {
     }
 }
 
+// stars
+
+let stars = document.getElementsByClassName("stars")[0];
+
+
+function updateStars() {
+    if (parseInt(moveCounter.innerHTML) == 10) {
+        stars.children[0].style.display = 'none';
+    } else if (parseInt(moveCounter.innerHTML) == 16) {
+        stars.children[1].style.display = 'none';
+    } else if (parseInt(moveCounter.innerHTML) == 30) {
+        alert("sorry, you used too many moves");
+        restartGame();
+        //TO-DO: 
+        // reuse the modal box to update the 
+    }
+}
+//console.log(stars.removeChild(stars.children[0]), "starsssss");
+
+
+
 // Restart the game Button (reset board, moves and star rating)
 let restart = document.getElementsByClassName('restart')[0];
 
 function restartGame() {
-    updateBoard(cardList);
-    moves.innerHTML = 0;
+    updateDeck(cardList);
+    moveCounter.innerHTML = 0;
+
+    console.log(stars.children[1].hasAttribute('style'), "sssss");
     // TO-DO: reset stars
+    for (var i = 0; i < stars.children.length; i++) {
+        if (stars.children[i].hasAttribute('style')) {
+            stars.children[i].removeAttribute("style");
+        }
+    }
 }
 
 restart.addEventListener('click', restartGame);
