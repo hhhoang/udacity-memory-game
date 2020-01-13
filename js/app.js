@@ -1,9 +1,13 @@
+// TODO:
+// avoid double click on the same element turns to match
+// animation 
+// timer appears
+
 /*
  * Create a list that holds all of your cards
  */
 
 const cardList = ['fa fa-cube', 'fa fa-bolt', 'fa fa-cube', 'fa fa-leaf', 'fa fa-bomb', 'fa fa-paper-plane-o', 'fa fa-paper-plane-o', 'fa fa-anchor', 'fa fa-bomb', 'fa fa-diamond', 'fa fa-leaf', 'fa fa-anchor', 'fa fa-bolt', 'fa fa-bicycle', 'fa fa-bicycle', 'fa fa-diamond'];
-let isPlaying = false;
 /*
  * Display the cards on the page
  *   - shuffle the list of cards using the provided 'shuffle' method below
@@ -32,7 +36,7 @@ function updateDeck(cardList) {
     // if there is any element inside <UL> delete to restart fresh
     deck.innerHTML = '';
     let shuffledCardList = shuffle(cardList);
-    for (var i = 0; i < shuffledCardList.length; ++i) {
+    for (let i = 0; i < shuffledCardList.length; ++i) {
         let li = document.createElement('li');
         li.className = 'card';
         let icon = document.createElement('i');
@@ -40,10 +44,10 @@ function updateDeck(cardList) {
         li.appendChild(icon);
         deck.appendChild(li);
     }
-    isPlaying = true;
 }
 
 updateDeck(cardList);
+
 
 /*
  * set up the event listener for a card. If a card is clicked:
@@ -58,13 +62,14 @@ updateDeck(cardList);
 
 // following https://gomakethings.com/listening-for-click-events-with-vanilla-javascript/ 
 let openCardList = [];
+let allClickedCards = [];
+let startTiming;
 
 function clickCard(event) {
     let card = event.target;
 
     // if click is not on card, bail
     if (!card.matches('.card')) return;
-    //event.preventDefault();
     // if card is clicked, display Card
     if (openCardList.length < 2) {
         display(card);
@@ -127,6 +132,10 @@ let moveCounter = document.getElementsByClassName('moves')[0];
 
 function incrementMoveCounter() {
     moveCounter.innerHTML = parseInt(moveCounter.innerHTML) + 1;
+    // start timing at the first card flipping
+    if (parseInt(moveCounter.innerHTML) == 1) {
+        startTiming = performance.now();
+    }
 }
 
 
@@ -140,22 +149,44 @@ function checkIfAllCardsMatch() {
         }
     }
     if (match.length == 16) {
-        displayWonMessage();
+        // finish the timing 
+        let endTiming = performance.now();
+        let timing = millisToMinutesAndSeconds(endTiming - startTiming);
+        // and display the won message
+        displayWonMessage(timing, moveCounter);
     } else {
         match = [];
     }
 }
 
+//converting miliseconds to min:sec 
+// https://stackoverflow.com/questions/21294302/converting-milliseconds-to-minutes-and-seconds-with-javascript
+function millisToMinutesAndSeconds(millis) {
+    var minutes = Math.floor(millis / 60000);
+    var seconds = ((millis % 60000) / 1000).toFixed(0);
+    return minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
+}
+
 
 // Display win message
 // https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_modal
-function displayWonMessage() {
+function displayWonMessage(timing, moveCounter) {
     // Get the modal
-    var modal = document.getElementById('wonMessage');
+    let modal = document.getElementById('wonMessage');
     // Get the <span> element that closes the modal
-    var span = document.getElementsByClassName('close')[0];
+    let span = document.getElementsByClassName('close')[0];
+    // Get the button play me
+    let button = document.getElementById('playMe');
+
+    // add timing and moves and stars
+    let paragraph = document.getElementById('score ');
+    paragraph.innerHTML = "Yeah, you won the game in " + timing + " with " + moveCounter.innerHTML + " moves.";
 
     modal.style.display = 'block';
+
+    // Play me button
+    button.onclick = restartGame();
+
     // When the user clicks on <span> (x), close the modal
     span.onclick = function() {
         modal.style.display = 'none';
@@ -175,13 +206,13 @@ let stars = document.getElementsByClassName("stars")[0];
 
 
 function updateStars() {
-    if (parseInt(moveCounter.innerHTML) == 10) {
-        stars.children[0].style.display = 'none';
-    } else if (parseInt(moveCounter.innerHTML) == 16) {
-        stars.children[1].style.display = 'none';
-    } else if (parseInt(moveCounter.innerHTML) == 30) {
-        alert("sorry, you used too many moves");
-        restartGame();
+    if (parseInt(moveCounter.innerHTML) == 16) {
+        stars.children[2].style.color = 'gainsboro';
+    } else if (parseInt(moveCounter.innerHTML) == 28) {
+        stars.children[1].style.color = 'gainsboro';
+    } else if (parseInt(moveCounter.innerHTML) == 60) {
+        alert("sorry, you have used too many moves");
+        setTimeout(restartGame(), 3000);
         //TO-DO: 
         // reuse the modal box to update the 
     }
@@ -196,10 +227,8 @@ let restart = document.getElementsByClassName('restart')[0];
 function restartGame() {
     updateDeck(cardList);
     moveCounter.innerHTML = 0;
-
-    console.log(stars.children[1].hasAttribute('style'), "sssss");
-    // TO-DO: reset stars
-    for (var i = 0; i < stars.children.length; i++) {
+    //reset stars
+    for (let i = 0; i < stars.children.length; i++) {
         if (stars.children[i].hasAttribute('style')) {
             stars.children[i].removeAttribute("style");
         }
