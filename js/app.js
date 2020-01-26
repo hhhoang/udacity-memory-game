@@ -113,8 +113,6 @@ function checkIfMatch() {
 
 }
 
-
-
 // if the cards do match, lock the cards in the open position
 function matchCard(card) {
     card.className += ' match';
@@ -135,8 +133,25 @@ function incrementMoveCounter() {
     // start timing at the first card flipping
     if (parseInt(moveCounter.innerHTML) == 1) {
         startTiming = performance.now();
+        console.log(startTiming, "startttttt");
     }
 }
+
+// display Timer
+let idTimer = setInterval(myTimer, 1000);
+
+function myTimer() {
+    let endTime = performance.now();
+    document.getElementById('timer').innerHTML =
+        Math.round((endTime - startTiming) / 1000) + " Seconds";
+}
+
+
+// stop the Timimg
+function stopMyTimer() {
+    clearInterval(idTimer);
+}
+
 
 
 let match = [];
@@ -150,8 +165,8 @@ function checkIfAllCardsMatch() {
     }
     if (match.length == 16) {
         // finish the timing 
-        let endTiming = performance.now();
-        let timing = millisToMinutesAndSeconds(endTiming - startTiming);
+        stopMyTimer(idTimer);
+        let timing = document.getElementById("timer").innerHTML;
         // and display the won message
         displayWonMessage(timing, moveCounter);
     } else {
@@ -159,24 +174,17 @@ function checkIfAllCardsMatch() {
     }
 }
 
-//converting miliseconds to min:sec 
-// https://stackoverflow.com/questions/21294302/converting-milliseconds-to-minutes-and-seconds-with-javascript
-function millisToMinutesAndSeconds(millis) {
-    var minutes = Math.floor(millis / 60000);
-    var seconds = ((millis % 60000) / 1000).toFixed(0);
-    return minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
-}
-
-
 // Display win message
 // https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_modal
 function displayWonMessage(timing, moveCounter) {
+    console.log(timing, moveCounter, "testttttt");
     // Get the modal
-    let modal = document.getElementById('wonMessage');
+    let modal = document.getElementById('wonMessage ');
+    console.log(modal);
     // Get the <span> element that closes the modal
     let span = document.getElementsByClassName('close')[0];
     // Get the button play me
-    let button = document.getElementById('playMe');
+    let button = document.getElementById('playMe ');
 
     // add timing and moves and stars
     let paragraph = document.getElementById('score ');
@@ -189,10 +197,9 @@ function displayWonMessage(timing, moveCounter) {
 
     // When the user clicks on <span> (x), close the modal
     span.onclick = function() {
-        modal.style.display = 'none';
-    }
-
-    // When the user clicks anywhere outside of the modal, close it
+            modal.style.display = 'none';
+        }
+        // When the user clicks anywhere outside of the modal, close it
     window.onclick = function(event) {
         if (event.target == modal) {
             modal.style.display = 'none';
@@ -201,23 +208,15 @@ function displayWonMessage(timing, moveCounter) {
 }
 
 // stars
-
 let stars = document.getElementsByClassName("stars")[0];
 
-
 function updateStars() {
-    if (parseInt(moveCounter.innerHTML) == 16) {
+    if (parseInt(moveCounter.innerHTML) == 20) {
         stars.children[2].style.color = 'gainsboro';
-    } else if (parseInt(moveCounter.innerHTML) == 28) {
+    } else if (parseInt(moveCounter.innerHTML) == 30) {
         stars.children[1].style.color = 'gainsboro';
-    } else if (parseInt(moveCounter.innerHTML) == 60) {
-        alert("sorry, you have used too many moves");
-        setTimeout(restartGame(), 3000);
-        //TO-DO: 
-        // reuse the modal box to update the 
     }
 }
-//console.log(stars.removeChild(stars.children[0]), "starsssss");
 
 
 
@@ -225,7 +224,9 @@ function updateStars() {
 let restart = document.getElementsByClassName('restart')[0];
 
 function restartGame() {
+    // reset board
     updateDeck(cardList);
+    // reset moves
     moveCounter.innerHTML = 0;
     //reset stars
     for (let i = 0; i < stars.children.length; i++) {
@@ -233,6 +234,9 @@ function restartGame() {
             stars.children[i].removeAttribute("style");
         }
     }
+    // reset timer
+    stopMyTimer(idTimer);
+    document.getElementById("timer").innerHTML = "0 seconds";
 }
 
 restart.addEventListener('click', restartGame);
