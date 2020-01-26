@@ -143,9 +143,9 @@ function incrementMoveCounter() {
 //let idTimer = setInterval(myTimer, 1000);
 
 function myTimer() {
-    let endTime = performance.now();
+    let diffTime = performance.now();
     document.getElementById('timer').innerHTML =
-        Math.round((endTime - startTiming) / 1000) + " Seconds";
+        Math.round((diffTime - startTiming) / 1000) + " Seconds";
 }
 
 
@@ -193,7 +193,10 @@ function displayWonMessage(timing, moveCounter) {
     modal.style.display = 'block';
 
     // Play me button
-    button.onclick = restartGame();
+    button.onclick = function() {
+        modal.style.display = 'none';
+        restartGame();
+    }
 
     // When the user clicks on <span> (x), close the modal
     span.onclick = function() {
