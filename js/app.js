@@ -64,6 +64,7 @@ updateDeck(cardList);
 let openCardList = [];
 let allClickedCards = [];
 let startTiming;
+let idTimer;
 
 function clickCard(event) {
     let card = event.target;
@@ -133,12 +134,13 @@ function incrementMoveCounter() {
     // start timing at the first card flipping
     if (parseInt(moveCounter.innerHTML) == 1) {
         startTiming = performance.now();
+        idTimer = setInterval(myTimer, 1000);
         console.log(startTiming, "startttttt");
     }
 }
 
 // display Timer
-let idTimer = setInterval(myTimer, 1000);
+//let idTimer = setInterval(myTimer, 1000);
 
 function myTimer() {
     let endTime = performance.now();
@@ -177,10 +179,8 @@ function checkIfAllCardsMatch() {
 // Display win message
 // https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_modal
 function displayWonMessage(timing, moveCounter) {
-    console.log(timing, moveCounter, "testttttt");
     // Get the modal
     let modal = document.getElementById('wonMessage ');
-    console.log(modal);
     // Get the <span> element that closes the modal
     let span = document.getElementsByClassName('close')[0];
     // Get the button play me
