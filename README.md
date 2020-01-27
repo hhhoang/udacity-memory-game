@@ -1,4 +1,5 @@
 # Memory Game Project
+Using the skeleton project provided by Udacity, finish the project by adding the codes to perform clicking cards, matching or not matching, increase moves and add timers, display won message.
 
 ## Table of Contents
 
