@@ -1,7 +1,8 @@
+// Note
+// I am aware of ClassList but I dont use ClassList bcs it doesnt work on my safari
+
 // TODO:
-// avoid double click on the same element turns to match
 // animation 
-// timer appears
 
 /*
  * Create a list that holds all of your cards
@@ -99,7 +100,7 @@ function addToOpenCardList(card) {
 
 // check to see if the two cards match, if not 
 function checkIfMatch() {
-    if (openCardList[0].isEqualNode(openCardList[1])) {
+    if (openCardList[0].isEqualNode(openCardList[1]) && openCardList[0] != openCardList[1]) {
         matchCard(openCardList[0]);
         matchCard(openCardList[1]);
         openCardList = [];
@@ -145,7 +146,7 @@ function incrementMoveCounter() {
 function myTimer() {
     let diffTime = performance.now();
     document.getElementById('timer').innerHTML =
-        Math.round((diffTime - startTiming) / 1000) + " Seconds";
+        Math.round((diffTime - startTiming) / 1000);
 }
 
 
@@ -188,7 +189,7 @@ function displayWonMessage(timing, moveCounter) {
 
     // add timing and moves and stars
     let paragraph = document.getElementById('score ');
-    paragraph.innerHTML = "Yeah, you won the game in " + timing + " with " + moveCounter.innerHTML + " moves.";
+    paragraph.innerHTML = "Yeah, you won the game in " + timing + " seconds with " + moveCounter.innerHTML + " moves.";
 
     modal.style.display = 'block';
 
