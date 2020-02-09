@@ -8,7 +8,19 @@
  * Create a list that holds all of your cards
  */
 
-const cardList = ['fa fa-cube', 'fa fa-bolt', 'fa fa-cube', 'fa fa-leaf', 'fa fa-bomb', 'fa fa-paper-plane-o', 'fa fa-paper-plane-o', 'fa fa-anchor', 'fa fa-bomb', 'fa fa-diamond', 'fa fa-leaf', 'fa fa-anchor', 'fa fa-bolt', 'fa fa-bicycle', 'fa fa-bicycle', 'fa fa-diamond'];
+let cardList = ['fa fa-cube',
+    'fa fa-bolt',
+    'fa fa-leaf',
+    'fa fa-paper-plane-o',
+    'fa fa-anchor',
+    'fa fa-bomb',
+    'fa fa-bicycle',
+    'fa fa-diamond'
+];
+
+// duplicate the list itself
+cardList = cardList.concat(cardList);
+
 /*
  * Display the cards on the page
  *   - shuffle the list of cards using the provided 'shuffle' method below
@@ -61,12 +73,13 @@ updateDeck(cardList);
  *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
  */
 
-// following https://gomakethings.com/listening-for-click-events-with-vanilla-javascript/ 
+
 let openCardList = [];
 let allClickedCards = [];
 let startTiming;
 let idTimer;
 
+// following https://gomakethings.com/listening-for-click-events-with-vanilla-javascript/ 
 function clickCard(event) {
     let card = event.target;
 
@@ -85,7 +98,7 @@ deck.addEventListener('click', clickCard);
 function display(card) {
     // add class 'open show' to show the icon of the card
     card.className += ' open show';
-    incrementMoveCounter();
+
     updateStars();
     addToOpenCardList(card);
 }
@@ -98,9 +111,10 @@ function addToOpenCardList(card) {
     }
 }
 
-// check to see if the two cards match, if not 
+// check to see if the two cards match or not match
 function checkIfMatch() {
     if (openCardList[0].isEqualNode(openCardList[1]) && openCardList[0] != openCardList[1]) {
+        incrementMoveCounter();
         matchCard(openCardList[0]);
         matchCard(openCardList[1]);
         openCardList = [];
@@ -110,6 +124,7 @@ function checkIfMatch() {
             notmatchCard(openCardList[0]);
             notmatchCard(openCardList[1]);
             openCardList = [];
+            incrementMoveCounter();
         }, 500);
     }
 
@@ -136,7 +151,6 @@ function incrementMoveCounter() {
     if (parseInt(moveCounter.innerHTML) == 1) {
         startTiming = performance.now();
         idTimer = setInterval(myTimer, 1000);
-        console.log(startTiming, "startttttt");
     }
 }
 
@@ -148,7 +162,6 @@ function myTimer() {
     document.getElementById('timer').innerHTML =
         Math.round((diffTime - startTiming) / 1000);
 }
-
 
 // stop the Timimg
 function stopMyTimer() {
@@ -169,7 +182,7 @@ function checkIfAllCardsMatch() {
     if (match.length == 16) {
         // finish the timing 
         stopMyTimer(idTimer);
-        let timing = document.getElementById("timer").innerHTML;
+        let timing = document.getElementById('timer').innerHTML;
         // and display the won message
         displayWonMessage(timing, moveCounter);
     } else {
@@ -211,8 +224,8 @@ function displayWonMessage(timing, moveCounter) {
     }
 }
 
-// stars
-let stars = document.getElementsByClassName("stars")[0];
+// stars - update stars using different colors
+let stars = document.getElementsByClassName('stars')[0];
 
 function updateStars() {
     if (parseInt(moveCounter.innerHTML) == 20) {
@@ -240,7 +253,7 @@ function restartGame() {
     }
     // reset timer
     stopMyTimer(idTimer);
-    document.getElementById("timer").innerHTML = "0 seconds";
+    document.getElementById('timer').innerHTML = "0";
 }
 
 restart.addEventListener('click', restartGame);
