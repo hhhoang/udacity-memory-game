@@ -23,6 +23,9 @@ Then you click on another card, the card is revealed, the game will check if two
 If they match,the colours of the card will turn green and be locked at the "showing" position. 
 If they don't match, both of the cards will be turned back down again. 
 
+One move is counted when you click on 2 cards. 
+Timer is started on your first move and stopped when you finish the game.
+
 When you have all the cards matched, you win the game. Congratulations. 
 You will be informed in how many moves and how much time you need to finish the game. 
 
