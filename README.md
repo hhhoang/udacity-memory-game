@@ -3,7 +3,7 @@
 ## Table of Contents
 
 * [Instructions](#instructions)
-* [How to play the game] (#how-to-play-the-game)
+* [How To Play The Game](#how-to-play-the-game)
 * [Screenshots](#screenshots)
 * [Dependencies](#dependencies)
 * [Contributing](#contributing)
@@ -13,7 +13,7 @@
 This matching game is written as part of the Udacity Front-end Developer Course, where we have to finish different assignment. 
 You can clone or download this repository, open the "index.html" and start playing around with the game. 
 
-## how-to-play-the-game
+## How To Play The Game
 
 On the deck there are 16 covered cards containing 8 pairs of similar cards. 
 Your mission is to uncover all the cards within fewest number of moves and in fastest time. 
@@ -29,13 +29,13 @@ You will be informed in how many moves and how much time you need to finish the 
 
 ## Screenshots
 - **main screen**
-<img src="img/main.png" width="50%">
+<img src="img/main.png" alt="main deck of covered cards" width="50%">
 
 - **open cards**
-<img src="img/show.png" width="50%">
+<img src="img/show.png" alt="deck with one card showing its content" width="50%">
 
 - **matched cards**
-<img src="img/match.png" width="50%">
+<img src="img/match.png" alt="deck with two cards matching and showing their contents" width="50%">
 
 ## Dependencies
 - Font Awesome 4.6.1
