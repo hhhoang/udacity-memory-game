@@ -3,9 +3,9 @@
 ## Table of Contents
 
 * [Instructions](#instructions)
-* [How to play the game] (#How to play the game)
-* [Screenshots](#Screenshots)
-* [Dependencies](#Dependencies)
+* [How to play the game] (#how-to-play-the-game)
+* [Screenshots](#screenshots)
+* [Dependencies](#dependencies)
 * [Contributing](#contributing)
 
 
@@ -27,12 +27,12 @@ You will be informed in how many moves and how much time you need to finish the 
 
 
 ## Screenshots
-- main screen
+- **main screen**
 <img src="img/main.png" width="50%">
-- open cards
-<img src="img/show.png">
-- matched cards
-<img src="img/match.png">
+- **open cards**
+<img src="img/show.png" width="50%">
+- **matched cards**
+<img src="img/match.png" width="50%">
 
 ## Dependencies
 - Font Awesome 4.6.1
